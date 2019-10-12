@@ -22,6 +22,22 @@
 
   <style>
 
+    :root {
+      --base: #ffc600;
+      --spacing: 10px;
+      --blur: 10px;
+    }
+
+    img {
+      padding: var(--spacing);
+      background: var(--base);
+      filter: blur(var(--blur));
+    }
+
+    .hl {
+      color: var(--base);
+    }
+
     /*
       misc styles, nothing to do with CSS variables
     */
@@ -45,6 +61,21 @@
   </style>
 
   <script>
+    
+    const inputs = document.querySelectorAll('.controls input'); //selecting all the inputs inside the controls class (gives a nodelist, not an array)
+
+    function handleUpdate() {
+      const suffix = this.dataset.sizing || '';
+      /* dataset gives an object of all the data attributes associated with the element. here we are using only the data-sizing attribute ad if that's not present we'll fall back to empty string which is ''. This is to deal with the suffix px for spacing and blur and '' is for colors because they don't have suffixes. */
+
+      document.documentElement.style.setProperty(`--${this.name}`, this.value + suffix);
+      /* document.documentElement returns the root of the document which html
+        if you check inspect element of the css values that are using the css variables, the variable name itself will be shown instead compiling and placing the numeric or hex value there, so that it acts as a variable truly. so now we can alter the variable and the values will automatically change in real time.
+      */
+    }
+
+    inputs.forEach(input => input.addEventListener('input', handleUpdate)); // foreach is for nodelist and not for array
+
   </script>
 
 </body>
