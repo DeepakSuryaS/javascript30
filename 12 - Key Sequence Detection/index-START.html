@@ -7,6 +7,22 @@
 </head>
 <body>
 <script>
+
+  const pressed = [];
+  const secretCode = 'wesbos';
+
+  window.addEventListener('keyup', (e) => {
+    // console.log(e.key);
+    pressed.push(e.key);
+    pressed.splice(-secretCode.length - 1, pressed.length - secretCode.length); // start from the -7th char and grab 6 chars (from the -7th means -6, -5, -4, -3, -2, -1)
+    // console.log(pressed.length - secretCode.length);
+    if(pressed.join('').includes(secretCode)) {
+      console.log('Bang bang bangiti bang bang bang bangiti bang!');
+      cornify_add();
+    }
+    // console.log(pressed);
+  });
+
 </script>
 </body>
 </html>
