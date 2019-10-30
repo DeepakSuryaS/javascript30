@@ -49,6 +49,16 @@ function scrub(e) {
   video.currentTime = scrubTime;
 }
 
+function toggleFullScreen(e) {
+  if(e.keyCode == 70) { // keycode for f key
+    if(!document.fullscreenElement || !document.webkitFullscreenElement) {
+      video.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  }
+}
+
 /* hook up the event listeners */
 video.addEventListener('click', togglePlay);
 video.addEventListener('play', updateButton);
@@ -63,3 +73,6 @@ progress.addEventListener('click', scrub);
 progress.addEventListener('mousemove', (e) => mousedown && scrub(e)); // if mousedown is true, it moves to scrub() else breaks out. this is similar to an if block
 progress.addEventListener('mousedown', () => mousedown = true);
 progress.addEventListener('mouseup', () => mousedown = false);
+
+// fullscreen toggle with 'f' key
+document.addEventListener('keyup', toggleFullScreen);
