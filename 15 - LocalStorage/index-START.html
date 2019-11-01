@@ -21,6 +21,8 @@
     </ul>
     <form class="add-items">
       <input type="text" name="item" placeholder="Item Name" required>
+      <input type="button" id="uncheckAll" value="Uncheck All">
+      <input type="button" id="deleteAll" value="Delete All">
       <input type="submit" value="+ Add Item">
     </form>
   </div>
@@ -28,7 +30,76 @@
 <script>
   const addItems = document.querySelector('.add-items');
   const itemsList = document.querySelector('.plates');
-  const items = [];
+  const uncheckAll = document.getElementById('uncheckAll');
+  const deleteAll = document.getElementById('deleteAll');
+  const items = JSON.parse(localStorage.getItem('items')) || [];
+
+  function addItem(e) {
+    e.preventDefault();
+    const name = (this.querySelector('[name=item]')).value; // this is the form element itself
+    /* const item = {
+      name: name,
+      done: false
+    } */
+    const item = {
+      name, // es6 shorthand property
+      done: false
+    };
+
+    items.push(item);
+    populateList(items, itemsList);
+    localStorage.setItem('items', JSON.stringify(items));
+    this.reset(); // reset values in the form
+    //console.log(item);
+  }
+
+  // items = [] means if there is no input (user simply clicks submit), this prevents error and loops over empty array
+  function populateList(items = [], itemsList) {
+    itemsList.innerHTML = items.map((item, index) => {
+      return `
+        <li>
+          <input type="checkbox" data-index=${index} id="item${index}" ${item.done ? 'checked' : ''} />
+          <label for="item${index}">${item.name}</label>  
+        </li>
+      `;
+    }).join(''); // maps usually returns an array but to use with innerHTML we need string, that's why join
+
+  }
+
+  function toggleDone(e) {
+    if(!e.target.matches('input')) return; // skip unless its an input element (matches is similar the is operator)
+    const el = e.target;
+    const index = el.dataset.index;
+    items[index].done = !items[index].done;
+    localStorage.setItem('items', JSON.stringify(items));    
+    populateList(items, itemsList);
+  }
+
+  function unCheckList() {
+    items.forEach((item, index) => {
+      items[index].done = false;
+    });
+    localStorage.setItem('items', JSON.stringify(items));    
+    populateList(items, itemsList);
+  }
+
+  function deleteList() {
+    localStorage.removeItem('items', JSON.stringify(items));
+    items.forEach((item, index) => {
+      delete items[index];
+    });
+    populateList(items, itemsList);
+  }
+
+  addItems.addEventListener('submit', addItem); // listens for form submission
+  itemsList.addEventListener('click', toggleDone);
+  populateList(items, itemsList);
+
+  uncheckAll.addEventListener('click', unCheckList);
+  deleteAll.addEventListener('click', deleteList);
+
+  // console.log(localStorage);
+
 
 </script>
 
