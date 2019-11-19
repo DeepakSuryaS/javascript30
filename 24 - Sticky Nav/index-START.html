@@ -54,7 +54,25 @@
   </div>
 
 <script>
+  const nav = document.querySelector('#main');
+  const topOfNav = nav.offsetTop;
 
+  function fixNav() {
+    // console.log(topOfNav, window.scrollY);
+    if(window.scrollY >= topOfNav) {
+      /* when we set the nav to be position: fixed, it's gonna give up the space that it has been occupying in the document. 
+         this will cause a jerk in the document content as they make for the space that the nav gave up
+         inorder to avoid that jerk, we set a padding to the top of the body as the height of the nav
+      */
+      document.body.style.paddingTop = nav.offsetHeight + 'px';
+      document.body.classList.add('fixed-nav'); // adding to the body instead of the nav because it'll be convenient to target other elements in the css
+    } else {
+      document.body.style.paddingTop = 0;
+      document.body.classList.remove('fixed-nav');
+    }
+  }
+
+  window.addEventListener('scroll', fixNav);
 </script>
 
 </body>
